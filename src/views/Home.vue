@@ -28,7 +28,7 @@
                     index="1-1"
                     v-for="(item1, index1) in item.children"
                     :key="index1"
-                    :index="item.path"
+                    :index="item1.path"
                   >{{item1.authName}}</el-menu-item>
                 </el-submenu>
               </el-menu>
