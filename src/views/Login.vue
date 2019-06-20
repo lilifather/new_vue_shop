@@ -47,10 +47,12 @@ export default {
     async submitForm(loginForm) {
       this.$refs[loginForm].validate(async ok => {
         if (ok) {
-          const d = await this.axios.post("http://127.0.0.1:11333/api/private/v1/login",this.loginForm)
+          const d = await this.axios.post("login",this.loginForm)
           if(d.data.meta.status != 200) return this.$notify.error({title:"提示",message:"账号或密码错误"})
+          console.log(d)
           //保存用户信息
           sessionStorage.setItem('token',d.data.data.token)
+          sessionStorage.setItem('username',d.data.data.username)
           this.$message.success('登录成功');
           this.$router.push('/home')
         } else {
@@ -60,6 +62,7 @@ export default {
     }
   }
 };
+
 </script>
 <style lang="less">
 .login {
@@ -80,7 +83,7 @@ export default {
     }
   }
   .form{
-    width: 320px;
+    width: 290px;
     background: #fff;
     box-shadow: 5px 24px 18px #c6c6c6;
     position: absolute;

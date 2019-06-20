@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+const r =  new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -21,3 +21,16 @@ export default new Router({
     }
   ]
 })
+
+r.beforeEach((to,from,next)=>{
+
+  if(to.path == '/login')  return next();
+
+  let token = sessionStorage.getItem('token')
+
+  if(token)
+    return next() 
+  else 
+    return next('/login')
+})
+export default r
