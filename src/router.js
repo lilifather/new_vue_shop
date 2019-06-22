@@ -9,11 +9,17 @@ const r =  new Router({
   routes: [
     {
       path:'/',
-      redirect:'/home'
+      redirect:'/users'
     },
     {
       path: '/home',
-      component: () => import('./views/Home.vue')
+      component: () => import('./views/Home.vue'),
+      children:[
+        {
+          path: '/users',
+          component: () => import('./views/User.vue')
+        }
+      ]
     },
     {
       path: '/login',

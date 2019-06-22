@@ -2,11 +2,43 @@
  * @Author: 尊贵的QQ会员 
  * @Date: 2019-06-19 17:10:40 
  * @Last Modified by: 尊贵的QQ会员
- * @Last Modified time: 2019-06-19 17:15:39
+ * @Last Modified time: 2019-06-21 19:13:31
  */
  html,body{
    height: 100%;
    width: 100%;
    padding: 0;
-   margin: 0
+   margin: 0;
+   min-width: 1024px;
  }
+ .el-pagination{
+  padding-top: 20px;
+ }
+
+ /* 修改面包屑导航 */
+ .el-breadcrumb{
+  padding-bottom: 15px;
+ }
+ .el-breadcrumb .is-link{
+   color: rgba(85, 126, 208,.8)
+ }
+
+/* 文字向右 */
+.textRight{
+  text-align: right;
+}
+
+/* 更改组件按钮样式 */
+.el-button--primary{
+  background: rgba(85, 126, 208);
+}
+.el-button--primary:hover{
+  background: rgba(85, 126, 208);
+  opacity: .9;  
+}
+.el-button--primary.is-active, .el-button--primary:active{
+  background: rgba(85, 126, 208);
+}
+.el-button--primary:focus, .el-button--primary:hover{
+  background: rgba(85, 126, 208);
+}

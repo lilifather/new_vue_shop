@@ -54,7 +54,7 @@ export default {
           sessionStorage.setItem('token',d.data.data.token)
           sessionStorage.setItem('username',d.data.data.username)
           this.$message.success('登录成功');
-          this.$router.push('/home')
+          this.$router.push('/')
         } else {
           return false
         }

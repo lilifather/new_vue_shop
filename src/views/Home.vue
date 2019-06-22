@@ -33,12 +33,13 @@
                 </el-submenu>
               </el-menu>
             </el-row>
-          <i class="el-icon-s-fold collIcon" @click="collapse=!collapse"></i>
-
+          <!-- <i class="el-icon-s-fold collIcon" @click="collapse=!collapse"></i> -->
           </el-aside>
         </div>
-        <el-container>
-          <el-main>Main</el-main>
+        <el-container class="homeMain">
+          <el-main>
+            <router-view></router-view>
+          </el-main>
           <el-footer>Author: 上海黑马php20期 韩斌</el-footer>
         </el-container>
       </el-container>
@@ -83,12 +84,7 @@ export default {
     const username = sessionStorage.getItem("username");
     this.username = username;
     //获取左侧菜单栏
-    const menus = await this.axios.get("menus", {
-      headers: {
-        Authorization: sessionStorage.getItem("token")
-      }
-    });
-    console.log(menus.data.data);
+    const menus = await this.axios.get("menus");
     this.menus = menus.data.data;
   }
 };
@@ -96,26 +92,29 @@ export default {
 <style lang="less">
 .home {
   height: 100%;
+  .homeMain{
+    background: #f9fafc;
+  }
   .el-container {
     height: 100%;
+    padding-top: 5px;
     .el-footer {
       display: flex;
       align-items: center;
     }
     .main {
       box-shadow: 3px 7px 4px 0 rgba(0, 0, 0, 0.08);
-      padding-top: 3px;
       position:relative;
       .collIcon{
           position: absolute;
           left: 0;
           bottom: 0;
           width: 100%;
-          background: #a9a7a769;
+          background: rgba(85, 126, 208, 1);
+          color: #fff;
           height: 40px;
           text-align: center;
           cursor: pointer;
-          color: #5a5a5a;
           font-size: 23px;
           line-height: 40px;
         }
@@ -126,6 +125,10 @@ export default {
         .el-menu-item {
           padding-left: 60px !important;
           color: #7a7a7a;
+        }
+        .el-menu-item:hove{
+          color: #fff;
+          background: rgba(85, 126, 208, 0.8);
         }
         .iconfont {
           font-size: 20px;
