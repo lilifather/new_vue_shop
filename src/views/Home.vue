@@ -89,7 +89,7 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="stylus">
 .home {
   height: 100%;
   .homeMain{

@@ -4,7 +4,12 @@
   </div>
 </template>
 
-<style lang="less">
+<script>
+export default {
+  
+}
+</script>
+<style lang="stylus">
     #app{
         height: 100%;
     }

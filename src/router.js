@@ -9,7 +9,7 @@ const r =  new Router({
   routes: [
     {
       path:'/',
-      redirect:'/users'
+      redirect:'/reports'
     },
     {
       path: '/home',
@@ -18,6 +18,26 @@ const r =  new Router({
         {
           path: '/users',
           component: () => import('./views/User.vue')
+        },
+        {
+          path: '/goods',
+          component: () => import('./views/goods/Goods.vue')
+        },
+        {
+          path: '/addGoods',
+          component: () => import('./views/goods/addGoods.vue')
+        },
+        {
+          path: '/reports',
+          component: () => import('./views/reports.vue')
+        },
+        {
+          path: '/roles',
+          component: () => import('./views/roles.vue')
+        },
+        {
+          path: '/params',
+          component: () => import('./views/params.vue')
         }
       ]
     },

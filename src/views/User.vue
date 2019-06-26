@@ -261,7 +261,6 @@ export default {
       })
         .then(async () => {
           const res = await this.axios.delete(`users/${id}`);
-          console.log(res.data.meta.status );
           if (res.data.meta.status != 200)
             return this.$message.error("删除失败");
           this.$notify.success({
@@ -310,7 +309,6 @@ export default {
       if (userData.data.meta.status != 200) {
         return this.$message.error("获取列表数据失败");
       }
-      console.log(userData)
       this.userList = userData.data.data.users;
       this.total = userData.data.data.total;
     }
@@ -320,7 +318,7 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="stylus">
 </style>
 
 

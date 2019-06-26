@@ -49,7 +49,6 @@ export default {
         if (ok) {
           const d = await this.axios.post("login",this.loginForm)
           if(d.data.meta.status != 200) return this.$notify.error({title:"提示",message:"账号或密码错误"})
-          console.log(d)
           //保存用户信息
           sessionStorage.setItem('token',d.data.data.token)
           sessionStorage.setItem('username',d.data.data.username)
@@ -64,7 +63,7 @@ export default {
 };
 
 </script>
-<style lang="less">
+<style lang="stylus">
 .login {
   height: 100%;
   width: 100%;
