@@ -37,7 +37,7 @@
         <el-table-column prop="goods_name" label="商品名称" width="400"></el-table-column>
         <el-table-column prop="goods_price" label="商品价格"></el-table-column>
         <el-table-column prop="goods_weight" label="商品重量"></el-table-column>
-        <el-table-column prop="add_time" label="创建时间"></el-table-column>
+        <el-table-column label="关注时间" prop="add_time" :formatter="timestampToTime"></el-table-column>
         <el-table-column prop label="操作">
           <template slot-scope="scope">
             <el-button

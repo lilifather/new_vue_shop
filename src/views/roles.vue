@@ -18,7 +18,7 @@
             <el-row v-for="(item, index) in scope.row.children" :key="index">
               <el-col :span="6">
                 <el-tag
-                  @close="handleClose(scope.row.id,item.id,scope.$index)"
+                  @close="handleClose(scope.row.id,item.id,scope.$index,scope.row.id)"
                   closable
                 >{{item.authName}}</el-tag>
               </el-col>
@@ -52,7 +52,7 @@
         <el-table-column prop="roleDesc" label="权限描述"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button type="success" size="mini"  @click="authorize(scope.row.id)">分配权限</el-button>
+            <el-button type="success" size="mini"  @click="authorize(scope.row)">分配权限</el-button>
             <el-button type="primary" size="mini" @click="edit(scope.$index,scope.row.id)">修改</el-button>
             <el-button type="danger" size="mini" @click="del(scope.row.id)">删除</el-button>
           </template>
@@ -62,7 +62,7 @@
     <!-- 添加角色框 -->
     <el-dialog title="添加角色" :visible.sync="addDialog">
       <el-form :model="addform" :rules="addrules">
-        <input type="text" v-model="addform.roleid">
+        <input type="hidden" v-model="addform.roleid">
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="addform.roleName" autocomplete="off" placeholder="请输入角色名称"></el-input>
         </el-form-item>
@@ -100,8 +100,9 @@
         ref="tree"
         :data="allqx"
         show-checkbox
+        :default-checked-keys="defaultCheckedKeys"
         node-key="id"
-         @check-change="handleCheckChange"
+        default-expand-all 
         :props="defaultProps">
       </el-tree>
       <div slot="footer" class="dialog-footer">
@@ -115,12 +116,13 @@
 export default {
   data() {
     return {
+       // 默认情况下，角色已经拥有的三级权限Id数组
+      defaultCheckedKeys: [],
       NowRoleId:'',
       defaultProps: {
           children: 'children',
           label: 'authName'
       },
-      rids:[],  //权限id (字符串以,分割)
       rolesList: [],
       allqx:[],
       id: "",
@@ -155,21 +157,20 @@ export default {
     this.getData();
   },
   methods: {
-     handleCheckChange() {
-       let res = this.$refs.tree.getCheckedNodes()
-       let aids = []
-       res.forEach(function(element, index, array){
-         aids.push(element.id)
-       })
-       this.rids = aids
-      },
       //确定授权
       async saveQx(){
-        const ids = this.rids.join(',')
-        console.log(ids)
+        // const ids = this.rids.join(',')
+        const k1 = this.$refs.tree.getCheckedKeys()
+        console.log(k1)
+        // 获取半选的key数组
+        const k2 = this.$refs.tree.getHalfCheckedKeys()
+        console.log(k2)
+
+        const idstr = [...k1, ...k2].join(',')
         let params = {
-          rids:ids
+          rids:idstr
         }
+
         let {data:res} = await this.axios.post(`roles/${this.NowRoleId}/rights`,params)
         if(res.meta.status != 200) 
         return this.$message.error('更新失败')
@@ -182,7 +183,8 @@ export default {
         this.getData()
       },
     //授权
-    async authorize(roleid){
+    async authorize(role){
+        let roleid = role.id
         this.authDialog = true
         //赋值该用户的权限id
         this.NowRoleId = roleid
@@ -191,6 +193,20 @@ export default {
         if(res.meta.status!=200)
         return this.$message.error('获取权限列表失败')
         this.allqx = res.data
+
+        const keys = []
+        this.getLeafId(role, keys)
+        this.defaultCheckedKeys = keys
+
+        //关闭
+        this.setRightDialogVisible = true
+      },
+      // 递归获取角色下所有三级权限Id
+      getLeafId(node, keyArr) {
+        if (!node.children) {
+          return keyArr.push(node.id)
+        }
+        node.children.forEach(item => this.getLeafId(item, keyArr))
       },
     showDialog() {
       this.addDialog = true;
@@ -202,7 +218,6 @@ export default {
     //修改权限用户信息
     async edit(index,id){
       this.editDialog = true
-      console.log(this.rolesList[index])
       this.addform.roleid = this.rolesList[index].id
       this.addform.roleName =  this.rolesList[index].roleName
       this.addform.roleDesc =  this.rolesList[index].roleDesc
@@ -237,6 +252,8 @@ export default {
     },
 
     async handleClose(roleId, rightId, index) {
+      console.log(roleId)
+      console.log(rightId)
       let { data: res } = await this.axios.delete(
         `roles/${roleId}/rights/${rightId}`
       );

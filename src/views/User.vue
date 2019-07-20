@@ -66,8 +66,8 @@
                 size="mini"
                 circle
               ></el-button>
-              <el-tooltip effect="dark" content="分配权限" placement="top">
-                <el-button type="warning" icon="el-icon-s-tools" size="mini" circle></el-button>
+              <el-tooltip effect="dark" :enterable="false" content="分配权限" placement="top">
+                <el-button type="warning" @click="authRole(scope.row)" icon="el-icon-s-tools" size="mini" circle></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -132,6 +132,31 @@
         <el-button type="primary" @click="edit(editUserinfo.id)">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 分配角色 -->
+    <el-dialog title="分配角色" center :visible.sync="authRoledialog">
+      <el-form :model="authRoleUserinfo" label-width="80px">
+    <el-form-item label="用户id">
+      <el-input v-model="authRoleUserinfo.userId" autocomplete="off" disabled></el-input>
+    </el-form-item>
+    <el-form-item label="用户名">
+      <el-input v-model="authRoleUserinfo.username" autocomplete="off" disabled></el-input>
+    </el-form-item>
+    <el-form-item label="选择角色">
+     <el-select v-model="selectRoleId" placeholder="请选择角色">
+        <el-option
+          v-for="item in authRoleUserinfo.role"
+          :key="item.id"
+          :label="item.roleName"
+          :value="item.id">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="authRoledialog = false">取 消</el-button>
+        <el-button type="primary" @click="CheckRole">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -151,6 +176,13 @@ export default {
         callback()
       };
     return {
+      selectRoleId:'',
+      authRoledialog:false,
+      authRoleUserinfo:{
+        userId:'',
+        username: "",
+        role:[]
+      },
       tableForm: {
         query: "",
         pagenum: 1,
@@ -221,6 +253,35 @@ export default {
     }
   },
   methods: {
+    //保存角色
+    async CheckRole(){
+      let userid = this.authRoleUserinfo.userId
+      let params = {
+        rid:this.selectRoleId
+      }
+      let {data:res} = await this.axios.put(`users/${userid}/role`,params)
+      if(res.meta.status != 200) 
+        return this.$message.error('更新角色信息失败')
+      this.$notify.success({
+        title:'提示',
+        message:'角色更新成功'
+      })
+      this.authRoledialog = false
+      this.getUserlist()
+    },
+    //分配角色
+    async authRole(userInfo){
+      this.authRoledialog = true
+      let userid = userInfo.id
+      this.authRoleUserinfo.userId = userInfo.id
+      this.authRoleUserinfo.username = userInfo.username
+      //获取所有的角色
+      let {data:res} = await this.axios.get("roles")
+      if(res.meta.status != 200) 
+      return this.$message.error("获取角色信息失败")
+      console.log(res.data)
+      this.authRoleUserinfo.role = res.data
+    },
     async changestate(val,row){
         const res= await this.axios.put(`users/${row.id}/state/${row.mg_state}`)
         if(res.data.meta.status != 200) {
@@ -281,8 +342,8 @@ export default {
         title: "提示",
         message: "更新成功"
       });
-      this.getUserlist();
-      this.Editdialog = false;
+      this.getUserlist()
+      this.Editdialog = false
     },
     showEditDiaglog(data) {
       this.Editdialog = true;

@@ -36,9 +36,22 @@ const r =  new Router({
           component: () => import('./views/roles.vue')
         },
         {
+          path: '/categories',
+          component: () => import('./views/category.vue')
+        },
+        {
+          path: '/rights',
+          component: () => import('./views/rights/rights.vue')
+        },
+        {
           path: '/params',
-          component: () => import('./views/params.vue')
-        }
+          component: () => import('./views/params/params.vue')
+        },
+        {
+          path: '/orders',
+          component: () => import('./views/orders/orders.vue')
+        },
+        
       ]
     },
     {
