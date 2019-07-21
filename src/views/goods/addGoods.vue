@@ -17,7 +17,7 @@
       <el-tabs v-model="active" tabPosition="left" :before-leave="beforeleave">
         <el-tab-pane label="基本信息" name="0">
           <el-form ref="goodsrole" :rules="addgoodsRoles" :model="addGoodsForm" label-width="80px">
-            <el-form-item label="商品名称" prop="goods_name">
+            <el-form-item label="商品名称test" prop="goods_name">
               <el-input v-model="addGoodsForm.goods_name" placeholder="请输入商品名称"></el-input>
             </el-form-item>
             <el-form-item label="商品价格" prop="goods_price">
